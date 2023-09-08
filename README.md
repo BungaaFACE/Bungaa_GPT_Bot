@@ -1,4 +1,6 @@
 # BungaaGPT_Bot
+Используя этот репозиторий или код, использующийся в репозитории, вы соглашаетсь c [legal notice](https://github.com/BungaaFACE/Bungaa_GPT_Bot/blob/main/LEGAL_NOTICE.md). Автор не несет ответсвенности за любые копии, форки репозитория, перезаливы другими пользователями или чего-либо другого, связанного с этим репозиторием. Это репозиторий и аккаунт принадлежит только автору и выполнен исключительно в целях обучения. При необходимости владельцы продукта/контента могут связаться с автором с целью удаления использования их продукта/контента.
+By using this repository or any code related to it, you agree to the [legal notice](https://github.com/BungaaFACE/Bungaa_GPT_Bot/blob/main/LEGAL_NOTICE.md). The author is not responsible for any copies, forks, reuploads made by other users, or anything else related to gpt4free. This is the author's only account and repository and intended for educational purposes only. Owners of product may contact me to request the removal of their product from this repository.
 ## Описание
 Python Telegram-бот для ChatGPT.  
 - Поддерживаются сохранение контекста беседы и сброс для создания новой.
