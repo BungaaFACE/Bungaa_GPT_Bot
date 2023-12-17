@@ -3,23 +3,32 @@ import traceback
 
 
 CONVERSATION_MES_LIMIT = 512
+PROVIDERS_BLACKLIST = {'BaseProvider', 'AsyncProvider',
+                       'AsyncGeneratorProvider', 'RetryProvider', 'ChatBase'}
 
 
 class OpenAI_API:
 
-    def __init__(self, tg_user_id):
+    def __init__(self, tg_user_id, provider=None):
         self.messages = []
+        if not provider:
+            self.provider = provider
+        else:
+            self.provider = getattr(g4f.Provider, provider)
 
-    # def moderation_check(text):
-    #     return not openai.Moderation.create(input=text)['results'][0]['flagged']
+    async def change_provider(self, provider):
+        if provider == 'Лучший доступный провайдер':
+            self.provider = None
+        else:
+            self.provider = getattr(g4f.Provider, provider)
 
     async def send_message(self, text):
         self.messages.append({"role": "user", "content": text})
         try:
-            response = g4f.ChatCompletion.create(
-                model="gpt-3.5-turbo",
-                messages=self.messages,
-                provider=g4f.Provider.DeepAi)
+            response = await g4f.ChatCompletion.create_async(
+                model=g4f.models.default,
+                provider=self.provider,
+                messages=self.messages)
             self.messages.append({"role": "assistant", "content": response})
         except:
             print(traceback.format_exc())
@@ -48,10 +57,28 @@ class OpenAI_API:
 
         return ''
 
+    @staticmethod
+    async def get_providers_list():
+        providers_list = [provider for provider in g4f.Provider.__all__
+                          if provider not in PROVIDERS_BLACKLIST
+                          and getattr(g4f.Provider, provider).working and not getattr(g4f.Provider, provider).needs_auth]
+        providers_list.insert(0, 'Лучший доступный провайдер')
+        return providers_list
+
 
 if __name__ == '__main__':
-    user1 = OpenAI_API('1')
-    user1.send_message('Привет! Меня зовут Ким')
-    user1.send_message('Как меня зовут?')
-    user2 = OpenAI_API('2')
-    user2.send_message('Как меня зовут?')
+    import asyncio
+
+    async def main():
+        # user1 = OpenAI_API('1')
+        # response = await user1.send_message('Привет! Меня зовут Ким')
+        # print(response)
+        # response = await user1.send_message('Как меня зовут?')
+        # print(response)
+        # user2 = OpenAI_API('2')
+        # response = await user2.send_message('Как меня зовут?')
+        # print(response)
+        result = await OpenAI_API.get_providers_list()
+        print(result)
+
+    asyncio.run(main())
